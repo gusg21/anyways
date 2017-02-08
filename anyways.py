@@ -10,21 +10,43 @@ skipElseStatement = False
 
 ended = False
 
-try:
-	sys.argv[1]
-except:
-	path = input("Path to file >>> ")
-else:
-	path = sys.argv[1]
+debug = False
+path = ""
+index = 0
+for arg in sys.argv:
+	if arg == "-i" or arg == "--input":
+		try:
+			path = sys.argv[index + 1]
+			print("Path provided: " + sys.argv[index + 1])
+		except:
+			print("-i flag but no input file!")
 
+	if arg == "-d" or arg == "--debug":
+		print("debug: ON")
+		debug = True
+
+	if arg == "-h" or arg == "--help":
+		print("Usage:\n")
+		print("-d / --debug: Show a LOT of output; only use if debugging interpreter!")
+		print("-h / --help: This menu")
+		print("-i / --input: Provide an input file")
+
+		sys.exit()
+
+	index += 1
+
+if path == "":
+	path = input("Path to file >>>")
+
+print("Reading file...")
 with open(path, 'r') as myfile:
     data=myfile.read().splitlines()
 
 for line in data:
-	print("line: " + line)
+	if debug: print("line: " + line)
 
 	if line == "Who's there?":
-		print("else: detected")
+		if debug: print("else: detected")
 		if skipElseStatement:
 			skipCode = True
 
@@ -38,7 +60,7 @@ for line in data:
 			print(acc)
 
 		if line[:26] == "There was this guy called ":
-			print("detected: accumulator set")
+			if debug: print("detected: accumulator set")
 			acc = line[26:]
 
 		if line == '"What are you doing?" they said.':
@@ -70,22 +92,22 @@ for line in data:
 
 		if line[:13] == "Knock Knock, ":
 			comp = line[13:]
-			print("comp: " + comp + ", comp0: " + comp[0])
+			if debug: print("comp: " + comp + ", comp0: " + comp[0])
 			operator = comp[0]
 			operand = int(comp[1:])
 			if operator == ">":
-				print("if-type: gtr")
-				print("result: " + str(acc > operand))
+				if debug: print("if-type: gtr")
+				if debug: print("result: " + str(acc > operand))
 				if acc > operand:
 					skipElseStatement = True
 			if operator == "<":
-				print("if-type: lss")
-				print("result: " + str(acc < operand))
+				if debug: print("if-type: lss")
+				if debug: print("result: " + str(acc < operand))
 				if acc < operand:
 					skipElseStatement = True
 			if operator == "=":
-				print("if-type: equ")
-				print("result: " + str(acc == operand))
+				if debug: print("if-type: equ")
+				if debug: print("result: " + str(acc == operand))
 				if acc == operand:
 					skipElseStatement = True
 
@@ -108,10 +130,10 @@ for line in data:
 
 	else:
 
-		print("skip-code: true")
+		if debug: print("skip-code: true")
 
 
-print("acc: " + str(acc))
+if debug: print("acc: " + str(acc))
 
 if ended == False:
 	print("Please end your program with a 'That's all folks!'")
