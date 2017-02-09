@@ -5,6 +5,8 @@ print("Anyways Compiler ===============\n")
 acc = ""
 mem = [""] * 100
 
+append = 0 # The amount of extra program loops
+
 skipCode = False
 skipElseStatement = False
 skipThenStatement = False
@@ -47,7 +49,9 @@ while path == "":
 # Read file and split at newlines
 print("Reading file...")
 with open(path, 'r') as myfile:
-    data=myfile.read().splitlines()
+    program=myfile.read().splitlines() # program is the initial code
+
+data = program
 
 for line in data:
 	if debug: print("line: " + line)
@@ -113,21 +117,21 @@ for line in data:
 			operand = int(comp[1:]) # Number to compare to
 			if operator == ">":
 				if debug: print("if-type: gtr")
-				if debug: print("result: " + str(acc > operand))
+				if debug: print("result: " + str(int(acc) > int(operand)))
 				if int(acc) > int(operand):
 					skipElseStatement = True # Skip the else statement because it returned true
 				else:
 					skipThenStatement = True
 			if operator == "<":
 				if debug: print("if-type: lss")
-				if debug: print("result: " + str(acc < operand))
+				if debug: print("result: " + str(int(acc) < int(operand)))
 				if int(acc) < int(operand):
 					skipElseStatement = True # Skip the else statement because it returned true
 				else:
 					skipThenStatement = True
 			if operator == "=":
 				if debug: print("if-type: equ")
-				if debug: print("result: " + str(acc == operand))
+				if debug: print("result: " + str(int(acc) == int(operand)))
 				if int(acc) == int(operand):
 					skipElseStatement = True # Skip the else statement because it returned true
 				else:
@@ -152,8 +156,14 @@ for line in data:
 			else:
 				print("*** Malform at line: '" + line + "'")
 
+		if line == "Ha, ha, ha!": # Add the program to the end of the program
+			append += 1
+			if append % 20 == 0: # If append is a multiple of 5
+				data = [] # Some rudimentary memory saving
+			data += program
+
 		if line == "That's all folks!": # End the program
-			ended = True
+			sys.exit()
 
 	else:
 
